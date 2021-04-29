@@ -89,7 +89,7 @@ export default class LoginForm extends React.Component {
         }
 
         $.ajax({
-            url: 'http://localhost:60998/authentication/authentication/signin',
+            url: 'https://talentservicesidentity1.azurewebsites.net/authentication/authentication/signin',
             type: 'POST',
             data: JSON.stringify(loginModel),
             contentType: 'application/json',
@@ -97,6 +97,8 @@ export default class LoginForm extends React.Component {
             success: function (response) {
                 if (response.isSuccess && response.isEmailVerified) {
                     Cookies.set('talentAuthToken', response.token.token)
+                    console.log("token....");
+                    console.log(response.token.token);
                     window.location = userNavigation(response.token.userRole);
                     this.setState({ isLoading: false });
                     TalentUtil.notification.show("Login Successfull", "success", null, null)

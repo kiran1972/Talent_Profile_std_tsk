@@ -2,6 +2,7 @@
 import Cookies from 'js-cookie';
 import { ChildSingleInput } from '../Form/SingleInput.jsx';
 import { Location } from '../Employer/CreateJob/Location.jsx';
+
 export class IndividualDetailSection extends Component {
     constructor(props) {
         super(props)
@@ -10,7 +11,7 @@ export class IndividualDetailSection extends Component {
             Object.assign({}, props.details)
             : {
                 firstName: "",
-                lastName: "",
+                lastName:"",
                 email: "",
                 phone: ""
             }
@@ -112,12 +113,13 @@ export class IndividualDetailSection extends Component {
                 <button type="button" className="ui teal button" onClick={this.saveContact}>Save</button>
                 <button type="button" className="ui button" onClick={this.closeEdit}>Cancel</button>
             </div>
-        )
+        );
     }
 
     renderDisplay() {
 
-        let fullName = this.props.details ? `${this.props.details.firstName} ${this.props.details.lastName}` : ""
+        let firstName = this.props.details ? `${this.props.details.firstName}` : ""
+        let lastName = this.props.details ? `${this.props.details.lastName}` : ""
         let email = this.props.details ? this.props.details.email : ""
         let phone = this.props.details ? this.props.details.phone : ""
 
@@ -125,14 +127,15 @@ export class IndividualDetailSection extends Component {
             <div className='row'>
                 <div className="ui sixteen wide column">
                     <React.Fragment>
-                        <p>Name: {fullName}</p>
+                        <p>First Name: {firstName}</p>
+                        <p>Last Name: {lastName}</p>
                         <p>Email: {email}</p>
                         <p>Phone: {phone}</p>
                     </React.Fragment>
                     <button type="button" className="ui right floated teal button" onClick={this.openEdit}>Edit</button>
                 </div>
             </div>
-        )
+        );
     }
 }
 
@@ -214,6 +217,7 @@ export class CompanyDetailSection extends Component {
                     placeholder="Enter your last name"
                     errorMessage="Please enter a valid name"
                 />
+                
                 <ChildSingleInput
                     inputType="text"
                     label="Email address"
@@ -240,7 +244,7 @@ export class CompanyDetailSection extends Component {
                 <button type="button" className="ui teal button" onClick={this.saveContact}>Save</button>
                 <button type="button" className="ui button" onClick={this.closeEdit}>Cancel</button>
             </div>
-        )
+        );
     }
 
     renderDisplay() {
@@ -265,6 +269,6 @@ export class CompanyDetailSection extends Component {
                     <button type="button" className="ui right floated teal button" onClick={this.openEdit}>Edit</button>
                 </div>
             </div>
-        )
+        );
     }
 }

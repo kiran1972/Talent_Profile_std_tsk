@@ -71,7 +71,7 @@ export class Tags extends React.Component {
                     delimiters={delimiters} />
             </div>
 
-        )
+        );
     }
 }
 

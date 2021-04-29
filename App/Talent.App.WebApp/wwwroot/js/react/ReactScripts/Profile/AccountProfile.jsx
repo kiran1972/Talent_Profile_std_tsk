@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿﻿import React from 'react';
 import Cookies from 'js-cookie';
 import SocialMediaLinkedAccount from './SocialMediaLinkedAccount.jsx';
 import { IndividualDetailSection } from './ContactDetail.jsx';
@@ -17,6 +17,7 @@ import Experience from './Experience.jsx';
 import { BodyWrapper, loaderData } from '../Layout/BodyWrapper.jsx';
 import { LoggedInNavigation } from '../Layout/LoggedInNavigation.jsx';
 import TalentStatus from './TalentStatus.jsx';
+import TalentContactDetails from './TalentContactDetails.jsx';
 
 export default class AccountProfile extends React.Component {
     constructor(props) {
@@ -69,6 +70,7 @@ export default class AccountProfile extends React.Component {
     loadData() {
         var cookies = Cookies.get('talentAuthToken');
         $.ajax({
+            //url: 'https://talentservicesprofile20210219125952.azurewebsites.net/profile/profile/getTalentProfile',
             url: 'http://localhost:60290/profile/profile/getTalentProfile',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
@@ -76,6 +78,7 @@ export default class AccountProfile extends React.Component {
             },
             type: "GET",
             success: function (res) {
+                console.log(res)
                 this.updateWithoutSave(res.data)
             }.bind(this)
         })
@@ -83,18 +86,20 @@ export default class AccountProfile extends React.Component {
     }
     //updates component's state without saving data
     updateWithoutSave(newValues) {
+        //console.log(newValues);
         let newProfile = Object.assign({}, this.state.profileData, newValues)
         this.setState({
             profileData: newProfile
-        })
+        }, () => console.log(this.state.profileData));
     }
 
     //updates component's state and saves data
     updateAndSaveData(newValues) {
         let newProfile = Object.assign({}, this.state.profileData, newValues)
+        console.log(newProfile);
         this.setState({
             profileData: newProfile
-        }, this.saveProfile)
+        }, () => this.saveProfile())
     }
 
     updateForComponentId(componentId, newValues) {
@@ -103,8 +108,11 @@ export default class AccountProfile extends React.Component {
 
     saveProfile() {
         var cookies = Cookies.get('talentAuthToken');
+        console.log("this.state.profileData");
+        console.log(this.state.profileData);
         $.ajax({
             url: 'http://localhost:60290/profile/profile/updateTalentProfile',
+            //url: 'https://talentservicesprofile20210219125952.azurewebsites.net/profile/profile/updateTalentProfile',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
                 'Content-Type': 'application/json'
@@ -141,7 +149,7 @@ export default class AccountProfile extends React.Component {
                     <div className="ui container">
                         <div className="ui container">
                             <div className="profile">
-                                <form className="ui form">
+                                <div className="ui form">
                                     <div className="ui grid">
                                         <FormItemWrapper
                                             title='Linked Accounts'
@@ -154,14 +162,32 @@ export default class AccountProfile extends React.Component {
                                             />
                                         </FormItemWrapper>
                                         <FormItemWrapper
+                                            title='Description'
+                                            tooltip='Please describe yourself'
+                                        >
+                                            <SelfIntroduction
+                                                summary={this.state.profileData.summary}
+                                                description={this.state.profileData.description}
+                                                updateProfileData={this.updateAndSaveData}
+                                                updateWithoutSave={this.updateWithoutSave}
+                                            />
+                                        </FormItemWrapper>
+                                        <FormItemWrapper
                                             title='User Details'
                                             tooltip='Enter your contact details'
                                         >
-                                            <IndividualDetailSection
+                                            {/* <IndividualDetailSection
+                                            controlFunc={this.updateForComponentId}
+                                            details={profile}
+                                            componentId='contactDetails'
+                                        /> */}
+                                            <TalentContactDetails
                                                 controlFunc={this.updateForComponentId}
                                                 details={profile}
                                                 componentId='contactDetails'
+                                                updateProfileData={this.updateAndSaveData}
                                             />
+
                                         </FormItemWrapper>
                                         <FormItemWrapper
                                             title='Address'
@@ -256,6 +282,7 @@ export default class AccountProfile extends React.Component {
                                                 imageId={this.state.profileData.profilePhotoUrl}
                                                 updateProfileData={this.updateWithoutSave}
                                                 savePhotoUrl='http://localhost:60290/profile/profile/updateProfilePhoto'
+                                                //savePhotoUrl='https://talentservicesprofile20210219125952.azurewebsites.net/profile/profile/updateProfilePhoto'
                                             />
                                         </FormItemWrapper>
                                         <FormItemWrapper
@@ -266,6 +293,7 @@ export default class AccountProfile extends React.Component {
                                             <VideoUpload
                                                 videoName={this.state.profileData.videoName}
                                                 updateProfileData={this.updateWithoutSave}
+                                                //saveVideoUrl={'https://talentservicesprofile20210219125952.azurewebsites.net/profile/profile/updateTalentVideo'}
                                                 saveVideoUrl={'http://localhost:60290/profile/profile/updateTalentVideo'}
                                             />
                                         </FormItemWrapper>
@@ -279,21 +307,17 @@ export default class AccountProfile extends React.Component {
                                                 cvUrl={this.state.profileData.cvUrl}
                                                 updateProfileData={this.updateWithoutSave}
                                                 saveCVUrl={'http://localhost:60290/profile/profile/updateTalentCV'}
+                                            //saveCVUrl={'https://talentservicesprofile20210219125952.azurewebsites.net/profile/profile/updateTalentCV'}
                                             />
                                         </FormItemWrapper>
-                                        <SelfIntroduction
-                                            summary={this.state.profileData.summary}
-                                            description={this.state.profileData.description}
-                                            updateProfileData={this.updateAndSaveData}
-                                            updateWithoutSave={this.updateWithoutSave}
-                                        />
+
                                     </div>
-                                </form>
+                                </div>
                             </div >
                         </div>
                     </div>
                 </section>
             </BodyWrapper>
-        )
+        );
     }
 }

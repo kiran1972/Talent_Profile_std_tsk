@@ -52,13 +52,89 @@ namespace Talent.Services.Profile.Domain.Services
         public async Task<TalentProfileViewModel> GetTalentProfile(string Id)
         {
             //Your code here;
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            try
+            {
+                TalentProfileViewModel model = new TalentProfileViewModel();
+                User talentUser = (await _userRepository.GetByIdAsync(Id));
+
+                //model.Id = talentUser.Id;
+                model.FirstName = talentUser.FirstName;
+                model.LastName = talentUser.LastName;
+                model.Email = talentUser.Email;
+                model.Phone = talentUser.Phone;
+                model.LinkedAccounts = talentUser.LinkedAccounts;
+                model.Address = talentUser.Address;
+                model.Description = talentUser.Description;
+                model.Summary = talentUser.Summary;
+                model.Nationality = talentUser.Nationality;
+                model.VisaStatus = talentUser.VisaStatus;
+                model.VisaExpiryDate = talentUser.VisaExpiryDate;
+                model.JobSeekingStatus = talentUser.JobSeekingStatus;
+
+                return model;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<bool> UpdateTalentProfile(TalentProfileViewModel model, string updaterId)
         {
-            //Your code here;
-            throw new NotImplementedException();
+            //Your code here-------;
+            //throw new NotImplementedException();
+            model.Id = _userAppContext.CurrentUserId;
+            try
+            {
+                if (model.Id == null || model.Id == "")
+                {
+                    User talentUser = new User();
+                    talentUser.Id = _userAppContext.CurrentUserId;
+                    talentUser.FirstName = model.FirstName;
+                    talentUser.LastName = model.LastName;
+                    talentUser.Email = model.Email;
+                    talentUser.Phone = model.Phone;
+                    talentUser.UpdatedBy = updaterId;
+                    talentUser.UpdatedOn = DateTime.Now;
+                    talentUser.LinkedAccounts = model.LinkedAccounts;
+                    talentUser.Address = model.Address;
+                    talentUser.Description = model.Description;
+                    talentUser.Summary = model.Summary;
+                    talentUser.Nationality = model.Nationality;
+                    talentUser.VisaStatus = model.VisaStatus;
+                    talentUser.VisaExpiryDate = model.VisaExpiryDate;
+                    talentUser.JobSeekingStatus = model.JobSeekingStatus;
+                    await _userRepository.Add(talentUser);
+                    //await _userRepository.Update(talentUser);
+                    return true;
+                }
+                else { 
+                    User talentUser = (await _userRepository.GetByIdAsync(model.Id));
+                    talentUser.FirstName = model.FirstName;
+                    talentUser.LastName = model.LastName;
+                    talentUser.Email = model.Email;
+                    talentUser.Phone = model.Phone;
+                    talentUser.UpdatedBy = updaterId;
+                    talentUser.UpdatedOn = DateTime.Now;
+                    talentUser.LinkedAccounts = model.LinkedAccounts;
+                    talentUser.Address = model.Address;
+                    talentUser.Description = model.Description;
+                    talentUser.Summary = model.Summary;
+                    talentUser.Nationality = model.Nationality;
+                    talentUser.VisaStatus = model.VisaStatus;
+                    talentUser.VisaExpiryDate = model.VisaExpiryDate;
+                    talentUser.JobSeekingStatus = model.JobSeekingStatus;
+                    await _userRepository.Update(talentUser);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
         }
 
         public async Task<EmployerProfileViewModel> GetEmployerProfile(string Id, string role)

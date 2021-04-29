@@ -38,6 +38,6 @@ export class Description extends React.Component {
                     <p>Characters remaining : {characters} / {characterLimit}</p>
                 </div>
             </React.Fragment>
-        )
+        );
     }
 }
